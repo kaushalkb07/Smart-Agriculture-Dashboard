@@ -3,25 +3,25 @@
 {% block body %}
 <h2 class="container">Sign In</h2>
 <!-- Sign-in form with JS-based JWT authentication -->
-<form id="login-form" class="container">
+<form id="login-form" method="post" action="{% url 'signin' %}" class="container">
     {% csrf_token %}
     <div class="form-group">
-        <label for="inputUsername">Username</label>
-        <input name="loginusername" type="text" class="form-control" id="inputUsername" aria-describedby="emailHelp"
+        <input type="hidden" name="next" value="{{ next }}">
+        <label for="username">Username</label>
+        <input name="username" type="text" class="form-control" id="username" aria-describedby="emailHelp"
             placeholder="Enter Username" required autofocus>
         <small id="emailHelp" class="form-text text-muted">We'll never share your username with anyone else.</small>
     </div>
     <div class="form-group">
-        <label for="inputPassword">Password</label>
-        <input name="loginpassword" type="password" class="form-control" id="inputPassword" placeholder="Password"
-            required>
+        <label for="password">Password</label>
+        <input name="password" type="password" class="form-control" id="password" placeholder="Password" required>
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
 <!-- Registration link -->
 <div class="form-group container mt-2">
-    <label>Not a registered user? <a href="/user_signup">Sign Up</a></label>
+    <label>Not a registered user? <a href="/signup">Sign Up</a></label>
 </div>
 
 <!-- Error message display -->
@@ -30,46 +30,36 @@
 <!-- JavaScript for JWT authentication -->
 <script>
     document.getElementById('login-form').addEventListener('submit', async function (event) {
-        event.preventDefault();  // Prevent default form submission
-    
-        const username = document.getElementById('inputUsername').value;
-        const password = document.getElementById('inputPassword').value;
-    
-        // Send POST request to JWT token endpoint
+        event.preventDefault();
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
         const response = await fetch('/api/token/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}'
             },
             body: JSON.stringify({
                 username: username,
                 password: password
             })
         });
-    
+
         const data = await response.json();
-    
-        // Logging to check if tokens are stored and redirection logic is reached
-        console.log('Response Data:', data);
-    
+
         if (response.ok) {
-            // Save token in localStorage
+            // Save tokens in localStorage
             localStorage.setItem('access_token', data.access);
             localStorage.setItem('refresh_token', data.refresh);
-    
-            console.log('Access Token:', data.access);
-            console.log('Refresh Token:', data.refresh);
-            console.log('Redirecting to dashboard...');
-    
+            // Display tokens in the console for debugging
+            console.log("Access Token:", data.access);
+            console.log("Refresh Token:", data.refresh);
             // Redirect to the dashboard
-            window.location.href = 'http://localhost:8000/';
+            window.location.href = '/dashboard/';
         } else {
-            // Show error message if login fails
             document.getElementById('error-message').innerText = 'Invalid username or password';
         }
     });
-    
-    
 </script>
 {% endblock body %}

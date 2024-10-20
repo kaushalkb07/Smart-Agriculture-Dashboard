@@ -11,8 +11,6 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('signin/', views.signin, name='signin'),
     path('signout/', views.signout, name='signout'),
-    path('user_login/', views.user_login, name='user_login'),
-    path('user_signup/', views.user_signup, name='user_signup'),
     # Endpoint to obtain JWT token (login)
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     # Endpoint to refresh JWT token
