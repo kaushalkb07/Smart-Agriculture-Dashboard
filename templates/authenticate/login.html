@@ -3,10 +3,9 @@
 {% block body %}
 <h2 class="container">Sign In</h2>
 <!-- Sign-in form with JS-based JWT authentication -->
-<form id="login-form" method="post" action="{% url 'signin' %}" class="container">
+<form id="login-form" method="post" action="/auth/signin/" class="container">
     {% csrf_token %}
     <div class="form-group">
-        <input type="hidden" name="next" value="{{ next }}">
         <label for="username">Username</label>
         <input name="username" type="text" class="form-control" id="username" aria-describedby="emailHelp"
             placeholder="Enter Username" required autofocus>
@@ -21,45 +20,7 @@
 
 <!-- Registration link -->
 <div class="form-group container mt-2">
-    <label>Not a registered user? <a href="/signup">Sign Up</a></label>
+    <label>Not a registered user? <a href="/auth/signup">Sign Up</a></label>
 </div>
 
-<!-- Error message display -->
-<div id="error-message" class="container mt-2 text-danger"></div>
-
-<!-- JavaScript for JWT authentication -->
-<script>
-    document.getElementById('login-form').addEventListener('submit', async function (event) {
-        event.preventDefault();
-
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-
-        const response = await fetch('/api/token/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                username: username,
-                password: password
-            })
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            // Save tokens in localStorage
-            localStorage.setItem('access_token', data.access);
-            localStorage.setItem('refresh_token', data.refresh);
-            // Display tokens in the console for debugging
-            console.log("Access Token:", data.access);
-            console.log("Refresh Token:", data.refresh);
-            // Redirect to the dashboard
-            window.location.href = '/dashboard/';
-        } else {
-            document.getElementById('error-message').innerText = 'Invalid username or password';
-        }
-    });
-</script>
 {% endblock body %}

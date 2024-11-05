@@ -2,7 +2,7 @@
 
 {% block body %}
 <h2 class="container">Sign Up</h2>
-<form class="container" action="/signup/" method="post">
+<form class="container" action="/auth/signup/" method="post">
     {% csrf_token %}
     
     <div class="form-group">
@@ -39,6 +39,6 @@
 </form>
 
 <div class="form-group container mt-2">
-    <label>Already a registered user? <a href="/signin">Sign In</a></label>
+    <label>Already a registered user? <a href="/auth/signin">Sign In</a></label>
 </div>
 {% endblock body %}
