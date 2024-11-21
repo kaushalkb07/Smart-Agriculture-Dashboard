@@ -1,3 +1,6 @@
 django
 django-unfold
 pyotp
+pandas
+matplotlib
+request

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Weather Forecasting</h1>
+    <form method="post" class="form-inline justify-content-center">
+        {% csrf_token %}
+        <div class="input-group">
+            {{ form.city}}
+            <button class="btn btn-primary ml-2" type="submit">Get Weather</button>
+        </div>
+        <div class="input-group">
+            <a class="btn btn-primary ml-2" href="/">Back to dahsboard</a>
+        </div>
+    </form>
+
+    {% if error_message %}
+        <div class="alert alert-danger mt-3 text-center">{{ error_message }}</div>
+    {% endif %}
+
+    {% if weather_data %}
+        <div class="card mt-4">
+            <div class="card-header text-white bg-primary">
+                <h5 class="mb-0">Weather in {{ weather_data.city }}</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    <strong>Temperature:</strong> {{ weather_data.temperature }}°C<br>
+                    <strong>Wind Speed:</strong> {{ weather_data.windspeed }} km/h<br>
+                    <strong>Condition:</strong> {{ weather_data.weathercode }}
+                </p>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock body%}
