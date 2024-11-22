@@ -30,7 +30,7 @@ def get_weather(request):
                     raise Exception("Nominatim service unavailable")
             except Exception:
                 # Fallback to OpenCage
-                opencage_api_key = "YOUR_OPENCAGE_API_KEY"
+                opencage_api_key = "27df47907c7042ff8d09cf3b6617f0e8"
                 opencage_url = f"https://api.opencagedata.com/geocode/v1/json?q={city}&key={opencage_api_key}"
                 try:
                     fallback_response = requests.get(opencage_url, timeout=5)

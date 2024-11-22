@@ -36,7 +36,7 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
             <div
                 class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-                <h2 class="h2">Dashboard </h2><br>
+                <h2 class="h2">Smart Agriculture Dashboard </h2><br>
                 <div class="btn-toolbar mb-2 mb-md-0">
                     <div class="btn-group mr-2">
                         <a href="" class="btn btn-sm btn-outline-secondary">Export as CSV</a>
@@ -44,59 +44,32 @@
                     </div>
                 </div>
             </div>
-            <p id="welcome-message"></p>
+
+            <h4>Current Environmental Data</h4>
+            {% if latest_env_data %}
+                <p>Soil Moisture: {{ latest_env_data.soil_moisture }}%</p>
+                <p>Temperature: {{ latest_env_data.temperature }}°C</p>
+                <p>Humidity: {{ latest_env_data.humidity }}%</p>
+            {% else %}
+                <p>No environmental data available.</p>
+            {% endif %}
+        
+            <h4>Crops</h4>
+            <ul>
+                {% for crop in crops %}
+                    <li>
+                        {{ crop.name }}
+                        <a class="btn btn-sm btn-primary" href="{% url 'get_recommendations' crop.id %}">Get Recommendations</a>
+                    </li>
+                {% empty %}
+                    <p>No crops found. Please add some crops.</p>
+                {% endfor %}
+            </ul>
         </main>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.7.1/dist/Chart.min.js"></script>
-<script>
-    // Get access token from localStorage
-    const token = localStorage.getItem('access_token');
-    
-    if (token) {
-        // Fetch protected data
-        fetch('/api/protected/', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                // If access token is invalid, refresh the token
-                refreshAccessToken();
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.user) {
-                document.getElementById('welcome-message').innerText = `Welcome, ${data.user}!`;
-            }
-        });
-    } else {
-        // Redirect to login if no token is found
-        window.location.href = '/login/';
-    }
-    
-    // Function to refresh access token
-    function refreshAccessToken() {
-        const refreshToken = localStorage.getItem('refresh_token');
-        fetch('/api/token/refresh/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ 'refresh': refreshToken })
-        })
-        .then(response => response.json())
-        .then(data => {
-            localStorage.setItem('access_token', data.access);
-            // Reload the page with the new access token
-            window.location.reload();
-        });
-    }
-    </script>
-    
+
 
 {% endblock body%}
